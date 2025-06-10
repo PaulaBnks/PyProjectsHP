@@ -6,8 +6,13 @@ import numpy as np
 from bs4 import BeautifulSoup
 import re
 
+
+##############################################
+## Generate Summaries from Notes Embeddings###
+##############################################
+
 # --- CONFIGURATION ---
-ACCOUNT_ID = "00109000013HoXkAAK"  # Replace with your test account ID
+ACCOUNT_ID = "00109000013HoXkAAK"  
 PROJECT_ID = "southern-coda-233109"
 DATASET_ID = "import"
 TABLE_ID = "salesforce_embeddings"

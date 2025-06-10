@@ -13,6 +13,13 @@ from bs4 import BeautifulSoup
 import re
 import os
 import dateparser  # For smart date parsing
+
+
+###########################################################
+## Generate Embeddings from Salesforce Notes,Events,Tasks##
+###########################################################
+
+
 # --- CONFIGURATION ---
 run_on_git_actions = 'No'
 # --- AUTHENTICATION ---

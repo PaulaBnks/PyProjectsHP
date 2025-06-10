@@ -7,7 +7,7 @@ import requests
 import base64
 from docx import Document
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime, date
 from google.oauth2 import service_account
 from bs4 import BeautifulSoup
 import re
@@ -58,40 +58,45 @@ credentials = service_account.Credentials.from_service_account_file(
 bq_client = bigquery.Client(project='southern-coda-233109', credentials=credentials)
 print("✅ BigQuery login successful.")
 
+BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
 # --- HELPER FUNCTIONS ---
 
 def strip_html(text):
-    """Remove HTML tags and decode HTML entities."""
     if not text:
+        print("⚠️ Empty input to strip_html")  # DEBUG
         return ""
     try:
         soup = BeautifulSoup(text, "html.parser")
         clean_text = soup.get_text(separator="\n", strip=True)
+        #print("Cleaned HTML text:", repr(clean_text))  # DEBUG
         return clean_text
     except Exception as e:
         print(f"⚠️ Error stripping HTML: {e}")
         return text.strip()
 
+
+
 def preprocess_note_content(text):
-    """
-    Removes unhelpful lines like Avoma URLs and JavaScript placeholders.
-    Keeps actual meeting content.
-    """
+    print("Raw text before preprocessing:", repr(text))  # DEBUG
     lines = text.splitlines()
     cleaned_lines = []
     exclude_patterns = [
         r"^Avoma Meeting\s*$",
-        r"https?://",
+        r"https?",
         r"^You need to enable JavaScript to run this app.$"
     ]
     for line in lines:
         line_clean = line.strip()
         if not line_clean:
-            continue  # Skip empty lines
+            continue
         excluded = any(re.search(pattern, line_clean) for pattern in exclude_patterns)
+        #print(f"Line: {repr(line_clean)} | Excluded? {excluded}")  # DEBUG
         if not excluded:
             cleaned_lines.append(line_clean)
     return "\n".join(cleaned_lines)
+
+
 
 def normalize_dates(text, base_date=None):
     """
@@ -107,16 +112,48 @@ def normalize_dates(text, base_date=None):
     pattern = r"(next \w+ at \d{1,2}:\d{2})|(\w+day at \d{1,2}:\d{2})|(tomorrow at \d{1,2}:\d{2})|(\d{1,2}:\d{2}\s*[APMapm]+\s*\w+\s*\d{1,2},\s*\d{4})"
     return re.sub(pattern, replace_match, text, flags=re.IGNORECASE)
 
-def convert_bq_timestamp(dt_str):
-    """Convert timestamp string from BigQuery format to datetime object"""
-    try:
-        return datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
-    except ValueError:
+
+
+
+def convert_bq_timestamp(dt_val):
+    
+    if dt_val is None:
+        #print("⚠️ Received None as date input")
+        return None
+    
+    # If it's already a datetime object, remove timezone and return
+    if isinstance(dt_val, datetime):
+        return dt_val.replace(tzinfo=None)
+
+    # If it's a date object (no time), convert to datetime
+    if isinstance(dt_val, date):
+        return datetime.combine(dt_val, datetime.min.time())
+
+    # If it's a string, try parsing
+    if isinstance(dt_val, str):
         try:
-            return datetime.strptime(dt_str.split('.')[0], "%Y-%m-%dT%H:%M:%S")
-        except Exception as e:
-            print(f"⚠️ Could not parse date: {dt_str}")
-            return None
+            # Try format: 'YYYY-MM-DD HH:MM:SS'
+            return datetime.strptime(dt_val, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            try:
+                # Try format: 'YYYY-MM-DDTHH:MM:SS' (like ISO without fractional seconds)
+                return datetime.strptime(dt_val.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+            except ValueError:
+                try:
+                    # Try full ISO format with timezone: '2025-04-04 09:00:00+00:00'
+                    # Use fromisoformat which handles many formats including timezone
+                    parsed = datetime.fromisoformat(dt_val.replace('Z', '+00:00'))
+                    return parsed.replace(tzinfo=None)
+                except Exception as e:
+                    print(f"⚠️ Could not parse date string: {dt_val}")
+                    return None
+
+    # Fallback for any other unexpected type
+    print(f"⚠️ Unexpected date type: {repr(dt_val)} (type: {type(dt_val)})")
+    return None
+
+
+
 
 def get_embedding(text):
     result = genai.embed_content(
@@ -125,6 +162,65 @@ def get_embedding(text):
         task_type="retrieval_document"
     )
     return result["embedding"]
+
+
+def extract_note_content(version, session_id, instance):
+    version_id = version['Id']
+    filetype = version.get('FileType')
+    url = f"https://{instance}/services/data/v62.0/sobjects/ContentVersion/{version_id}?fields=CreatedDate"
+    headers = {'Authorization': f'Bearer {session_id}'}
+    meta_response = requests.get(url, headers=headers)
+    created_date = meta_response.json().get('CreatedDate', '') if meta_response.status_code == 200 else ''
+
+    download_url = f"https://{instance}/services/data/v62.0/sobjects/ContentVersion/{version_id}/VersionData"
+    content_response = requests.get(download_url, headers=headers)
+
+    if content_response.status_code != 200:
+        return None, created_date
+
+    content_bytes = content_response.content
+    if filetype in ['PLAINTEXT', 'HTML']:
+        content = content_bytes.decode('utf-8', errors='ignore')
+        return content.strip(), created_date
+    elif filetype == 'SNOTE':
+        decoded = safe_base64_decode(content_bytes.decode('utf-8', errors='ignore'))
+        return decoded.strip(), created_date
+    elif filetype == 'WORD_X':
+        return extract_docx_text_from_bytes(content_bytes), created_date
+    return None, created_date
+
+
+def safe_base64_decode(data, account_id=None):
+    """Attempts to decode base64 content safely."""
+    if not data or (isinstance(data, str) and data.strip() == ''):
+        return ''
+    if isinstance(data, bytes):
+        try:
+            data = data.decode('utf-8')
+        except UnicodeDecodeError:
+            try:
+                data = data.decode('latin1')
+            except Exception as e:
+                print("      ⚠️ Unable to decode byte stream.")
+                return "[Unreadable note content: Invalid byte stream]"
+    data = data.strip()
+    if len(data) >= 2 and all(c in BASE64_CHARS for c in data[:50]):
+        pass
+    else:
+        return data
+    missing_padding = len(data) % 4
+    if missing_padding:
+        data += '=' * (4 - missing_padding)
+    try:
+        decoded_bytes = base64.b64decode(data, validate=False, altchars=None)
+        decoded_text = decoded_bytes.decode('utf-8', errors='replace')
+        if decoded_text.count('\uFFFD') > len(decoded_text) // 4:
+            raise ValueError("Too many invalid characters after decode")
+        return decoded_text
+    except Exception as e:
+        return f"[Unreadable note content: {data[:100]}...]"
+
+
 
 def save_embedding(account_id, source_id, raw_text, clean_text, created_date, embedding, object_type="Note"):
     table_id = "southern-coda-233109.import.salesforce_embeddings"
@@ -153,7 +249,27 @@ def save_embedding(account_id, source_id, raw_text, clean_text, created_date, em
     else:
         print(f"✅ Stored embedding for {object_type} '{source_id}'")
 
-# --- MAIN SCRIPT LOGIC ---
+
+
+def convert_salesforce_time(dt_str):
+    """Convert Salesforce datetime string to BigQuery-compatible format."""
+    try:
+        dt = datetime.strptime(dt_str, "%Y-%m-%dT%H:%M:%S.%f%z")
+    except ValueError:
+        try:
+            dt = datetime.strptime(dt_str, "%Y-%m-%dT%H:%M:%S%z")
+        except ValueError:
+            try:
+                dt = datetime.strptime(dt_str.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+            except Exception as e:
+                print(f"⚠️ Could not parse date: {dt_str}")
+                return None
+    return dt
+
+
+
+
+### --- MAIN SCRIPT LOGIC ---  ###
 
 accountid = '00109000013HoXkAAK'
 print(f"\n📡 Fetching data for Account: {accountid}")

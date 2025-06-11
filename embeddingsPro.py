@@ -246,7 +246,7 @@ def save_note_embedding(account_id, version_id, raw_text, clean_text, created_da
 
 
 # --- MAIN SCRIPT LOGIC ---
-accountid = '00109000013HoXkAAK'
+accountid = '0015q00000J5Wk4AAF'
 print(f"\n📡 Fetching notes for Account: {accountid}")
 
 note_embeddings = []

@@ -5,6 +5,25 @@ from datetime import datetime, timedelta
 import numpy as np
 from bs4 import BeautifulSoup
 import re
+import json
+from simple_salesforce import Salesforce, SalesforceLogin
+
+# Load login credentials
+loginInfo = json.load(open(r"E:\Software\loginpd.json"))
+username = loginInfo['username']
+password = loginInfo['password']
+security_token = loginInfo['security_token']
+domain = 'login'
+
+# Log in to Salesforce
+session_id, instance = SalesforceLogin(
+    username=username,
+    password=password,
+    security_token=security_token,
+    domain=domain
+)
+sf = Salesforce(instance=instance, session_id=session_id)
+print(f"Successfully connected to Salesforce: {sf.base_url}")
 
 
 ##############################################
@@ -12,7 +31,7 @@ import re
 ##############################################
 
 # --- CONFIGURATION ---
-ACCOUNT_ID = "00109000013HoKRAA0" #00109000013HoXkAAK
+ACCOUNT_ID = "0015q00000J5Wk4AAF" #00109000013HoXkAAK
 PROJECT_ID = "southern-coda-233109"
 DATASET_ID = "import"
 TABLE_ID = "salesforce_embeddings"
@@ -187,19 +206,33 @@ else:
         ("Wer sind die Entscheidungsträger?", "6. Decision Makers")
     ]
 
-    # Ask each question and show results
-    for question, section in questions:
-        print(f"\n{'-'*50}\n")
-        print(f"📌 Section: {section}")
-        print(f"❓ Frage: {question}")
+generated_summary = ""
 
-        query_emb = get_query_embedding(question)
-        relevant_notes = find_most_relevant_note(query_emb, embeddings_data)
+for question, section in questions:
+    print(f"\n{'-'*50}\n")
+    print(f"📌 Section: {section}")
+    print(f"❓ Frage: {question}")
 
-        answer = ask_question_with_context(question, relevant_notes)
-        print(f"🧠 Gemini Antwort: {answer}")
+    query_emb = get_query_embedding(question)
+    relevant_notes = find_most_relevant_note(query_emb, embeddings_data)
 
-        # Optional: Print used notes
-        # print("\n📎 Verwendete Notizen:")
-        # for idx, (sim, text) in enumerate(relevant_notes):
-        #     print(f"\nNote {idx+1} (Ähnlichkeit: {sim:.4f})\n{text[:200]}...")
+    answer = ask_question_with_context(question, relevant_notes)
+    print(f"🧠 Gemini Antwort: {answer}")
+
+    generated_summary += f"### {section}\n**{question}**: {answer}\n\n"
+
+
+# Trim and upload to Salesforce
+if generated_summary.strip():
+    print("\n🚀 Uploading summary to Salesforce...")
+
+    try:
+        result = sf.Account.update(ACCOUNT_ID, {
+            'AI_Summary__c': generated_summary.strip()
+        })
+        print("✅ AI_Summary__c updated successfully.")
+    except Exception as e:
+        print(f"❌ Failed to update AI_Summary__c: {e}")
+else:
+    print("⚠️ No summary generated. Skipping update.")
+

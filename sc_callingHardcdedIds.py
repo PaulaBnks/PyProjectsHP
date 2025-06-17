@@ -9,7 +9,6 @@ import numpy as np
 from google.oauth2 import service_account
 
 # Google Sheets authorization
-#gc = pygsheets.authorize(service_file='E:\Software\python-project-403413-480829366e0a.json')
 gc = pygsheets.authorize(service_file=r'E:\Software\python-project-403413-480829366e0a.json')
 
 
@@ -87,7 +86,7 @@ for index, row in df_filtered_unique.iterrows():
 
 # Insert new work items if any
 if new_work_items:
-    #sf.bulk.Account_Work_Item__c.insert(new_work_items)
+    sf.bulk.Account_Work_Item__c.insert(new_work_items)
     print(f"Created {len(new_work_items)} new Account_Work_Item__c records.")
 else:
     print("No new Account_Work_Item__c records needed to be created.")
@@ -97,7 +96,7 @@ else:
 #######################
 
 # Extract unique bid_request_id values
-unique_bid_requests = df_sql_pocs_abgabetermin_CWNW_due[['bid_request_id', 'bid_package_name', 'sc_sf_account_id', 'gc_sf_account_id', 'project_name', 'bid_package_due_date', 'bid_request_first_invite_date', 'bid_request_status']].drop_duplicates()
+unique_bid_requests = df_sql_pocs_abgabetermin_CWNW_due[['bid_request_id', 'bid_package_name', 'bid_package_id', 'sc_sf_account_id', 'gc_sf_account_id', 'project_name', 'bid_package_due_date', 'bid_request_first_invite_date', 'bid_request_status']].drop_duplicates()
 
 account_ids = unique_bid_requests['sc_sf_account_id'].dropna().unique().tolist()
 accounts_with_work_items = {}
@@ -118,6 +117,7 @@ for _, row in unique_bid_requests.iterrows():
     gc_account_id = row['gc_sf_account_id']
     project_name = row['project_name']
     bid_package_name = row['bid_package_name']
+    bid_package_id = row['bid_package_id']
     bid_request_id = row['bid_request_id']
     bid_package_due_date = row['bid_package_due_date']
     bid_request_first_invite_date = row['bid_request_first_invite_date']
@@ -135,12 +135,13 @@ for _, row in unique_bid_requests.iterrows():
             'Bid_Package_Due_Date__c': bid_package_due_date,
             'Bid_Invite_Date__c': bid_request_first_invite_date,
             'Status_of_bid_invite__c': bid_request_status,
+            'Bid_Package_Id__c': bid_package_id
         }
         new_bid_requests.append(new_bid_request)
         print(new_bid_request)
 # Insert new Bid_Request__c records in bulk
 if new_bid_requests:
-    #sf.bulk.Bid_Request__c.insert(new_bid_requests)
+    sf.bulk.Bid_Request__c.insert(new_bid_requests)
     print(f"Created {len(new_bid_requests)} new Bid_Request__c records.")
 else:
     print("No new Bid_Request__c records needed to be created.")

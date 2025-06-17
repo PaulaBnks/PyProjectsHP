@@ -90,7 +90,7 @@ Where SCs_to_be_called.sf_billing_country_code IN ("DE","AT")
 AND SCs_to_be_called.sc_phone_final IS NOT NULL
 --AND SCs_to_be_called.bid_request_status IN ("opened","viewed","invited","accepted","watched")
 AND SCs_to_be_called.bid_request_status IN ("opened","viewed","invited","watched")
---AND SCs_to_be_called.bid_package_id IN ('2ec92da6-ce71-49b1-b67e-347673d9b186', '55d58b0e-9c5c-4885-b395-a6ccee9b7c55', 'fdda8399-c427-495d-abe7-fb3f269cbcc0', 'd7eef984-ac84-45e8-80f1-70c6b70863a1', '130121b0-9a26-4206-8a65-89c470c78609', 'ab5e56c8-c978-4f9b-93b6-588875bd2883')
+AND SCs_to_be_called.bid_package_id IN ('a4129ad9-ec16-4c17-93e2-79b5634d8eab')
 
 AND SCs_to_be_called.recieved_bids <= 2
 AND SCs_to_be_called.subcontractor_type = "network"
@@ -99,4 +99,4 @@ AND SCs_to_be_called.has_bid = false
 -- --AND bid_request_bid_due_date <> Current_date()
 -- AND (Extract(WEEK FROM bid_request_bid_due_date) = Extract(week From Current_date())
 --  or Extract(WEEK FROM bid_request_bid_due_date) = EXTRACT(WEEK FROM CURRENT_DATE() + INTERVAL 1 WEEK))
-AND SCs_to_be_called.gc_sf_account_id = '00109000013HoaoAAC'
+--AND SCs_to_be_called.gc_sf_account_id = '00109000013HoaoAAC'

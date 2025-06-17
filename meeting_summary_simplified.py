@@ -120,7 +120,7 @@ def extract_docx_text_from_bytes(file_bytes):
 # --- QUESTIONS TO ASK GEMINI ---
 questions = [
     ("Was sind die wichtigsten Erkenntnisse?", "1. Key Takeaways"),
-    ("Welche nächsten Schritte wurden besprochen?", "2. Action Items"),
+    ("Welche nächsten Schritte wurden im letzten Meeting besprochen?", "2. Action Items"),
     ("Was ist das Unternehmensprofil?", "3. Background"),
     ("Wie sieht der Ausschreibungsprozess aus?", "3a. Current Tendering Process"),
     ("Welche Probleme wurden erwähnt?", "4. Pain Points"),
@@ -138,7 +138,7 @@ def main():
         query = """
             SELECT Id, Name, AI_Summary__c 
             FROM Account 
-            WHERE Id = '0015q00000J5Wk4AAF'
+            WHERE Account_Status__c = 'Prospect' and CompanyType__c != 'Subcontractor' AND Temp__c = False
         """
         accounts = []
         response = sf.query(query)
@@ -209,11 +209,10 @@ def main():
 
                     prompt = f"""
                     Du bist ein Vertriebsassistent bei Cosuno und analysierst die folgenden Gesprächsnotizen eines Verkaufsgesprächs zwischen einem Cosuno-Vertriebsmitarbeiter und dem potenziellen Kundenunternehmen **{account_name}**.
-
                     Deine Aufgabe ist es, eine strukturierte Zusammenfassung zu erstellen, basierend auf den Inhalten der Notizen.
-
                     Beziehe dich ausschließlich auf Informationen aus diesen Notizen – ignoriere externe Annahmen oder Wissensdatenbanken.
                     Falls keine klaren Aussagen zu einem Thema vorliegen, antworte mit: "(Keine relevante Info gefunden)"
+                    Wenn du nach dem Entscheidungsprozess gefragt wirst, fasse bitte zusammen, welche Personen involviert werden müssen, um einen Vertrag abzuschließen und welche Rolle diese haben. Füge außerdem hinzu, welche Schritte erforderlich sind, um den Vertrag zu unterschreiben.
                     Die Antwort muss immer auf Deutsch verfasst sein.
 
                     #### Gesprächsnotizen:
@@ -258,7 +257,8 @@ def main():
                     ai_summary_json = json.dumps(summary_data, ensure_ascii=False, indent=2)
                     updates.append({
                         'Id': accountid,
-                        'AI_Summary__c': ai_summary_json
+                        'AI_Summary__c': ai_summary_json,
+                        'Temp__c': True
                     })
                 except Exception as e:
                     print(f"❌ JSON serialization error: {e}")

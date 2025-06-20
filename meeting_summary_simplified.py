@@ -140,6 +140,13 @@ def main():
             FROM Account 
             WHERE Account_Status__c = 'Prospect' and CompanyType__c != 'Subcontractor' AND Temp__c = False
         """
+
+        # query = """
+        #     SELECT Id, Name, AI_Summary__c 
+        #     FROM Account 
+        #     WHERE Id = '00109000013HnuQAAS'
+        # """
+
         accounts = []
         response = sf.query(query)
         accounts.extend(response['records'])

@@ -176,17 +176,17 @@ def extract_docx_text_from_bytes(file_bytes):
         return None
 
 print("📡 Querying Salesforce for target accounts...")
-query = """
-    SELECT Id, Name, AI_Summary__c 
-    FROM Account 
-    WHERE Account_Status__c = 'Prospect' and CompanyType__c != 'Subcontractor' AND Temp__c = False
-"""
-
 # query = """
 #     SELECT Id, Name, AI_Summary__c 
 #     FROM Account 
-#     WHERE Id = '0015q00000GY38oAAD'
+#     WHERE Account_Status__c = 'Prospect' and CompanyType__c != 'Subcontractor' AND Temp__c = False
 # """
+
+query = """
+    SELECT Id, Name, AI_Summary__c 
+    FROM Account 
+    WHERE Id = '00109000013HoDhAAK'
+"""
 accounts = []
 response = sf.query(query)
 accounts.extend(response['records'])

@@ -1,0 +1,17 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+Salesforce Data:
+- Acquired Tendering Volume: €{acquired_tendering_volume}
+- Tendering Volume (Last 365 Days): €{tendering_last_year}
+
+Meeting Notes:
+"{meeting_notes}"
+
+
+Based on this information, please answer the following question clearly:
+
+ What is the tendering volume that has been purchased by the customer and how does the tendering volume in the last 365 days compare to this purchased volume? 
+ If the volume is below expectations has the reason been explored / discussed in {meeting_notes}?
+
+
+Please format your response as a short, concise paragraph.

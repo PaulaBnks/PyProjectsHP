@@ -205,8 +205,13 @@ def main():
                     continue
 
                 if not combined_text.strip():
-                    print("⚠️ Skipping: No recent meeting notes found.")
+                    print("⚠️ No recent meeting notes found. Marking Temp__c = True and skipping summary.")
+                    updates.append({
+                        'Id': accountid,
+                        'Temp__c': True
+                    })
                     continue
+
 
                 summary_data = []
 

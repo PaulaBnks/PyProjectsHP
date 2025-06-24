@@ -1,0 +1,17 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+Meeting Notes:
+"{meeting_notes}"
+
+Please note:
+
+    The "Participants" section of the meeting notes lists attendees from both Cosuno and the customer.
+
+Based on this information, please answer the following question clearly:
+
+    From the {meeting_notes} answer the following questions
+        - Who is the decision maker?
+        - Who signed the contract? Who is the contact person listed on the contract?
+        - Who is the champion?
+
+Please format your response as a short, concise answer.

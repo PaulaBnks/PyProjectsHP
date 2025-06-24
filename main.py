@@ -5,89 +5,21 @@ from salesforce_auth import login_to_salesforce
 from gemini_prompter import (
     setup_gemini, create_prompt_question_1, create_prompt_question_2, create_prompt_question_3,
     create_prompt_question_4, create_prompt_question_5, create_prompt_question_6, create_prompt_question_7, create_prompt_question_8,
-    create_prompt_question_9, create_prompt_question_10, create_prompt_question_11, create_prompt_question_12
+    create_prompt_question_9, create_prompt_question_10, create_prompt_question_11, create_prompt_question_12, create_prompt_question_13,
+    create_prompt_question_14, create_prompt_question_15, create_prompt_question_16
 )
 
 from note_extractor import extract_note_content
 from doc_writer import get_google_docs_service, clear_and_update_google_doc
 from utils import chunked, is_recent
+from salesforce_functions import get_potential_users, format_tendering_volume, get_top_user_usage_metrics
 from datetime import datetime, timedelta
 
 DOCUMENT_ID = '1hISTyvQ_r-DVI3n3kfRQ9WGQiHcBvLMgh48M4zIuhkc'
 MAX_NOTE_LENGTH = 50000    # Maximum length of notes to process
 
 
-def get_potential_users(sf, account_id):
-    """
-    Calculates metrics for Salesforce account:
-    - Active users
-    - Potential inactive users (with job titles common across org)
-    - Total addressable users (active + potential inactive)
 
-    # Step 1: Get list of active contact job titles across the entire org
-    """
-
-    active_titles_query = """
-    SELECT Job_Title__c 
-    FROM Contact 
-    WHERE Active__c = TRUE 
-      AND Job_Title__c != NULL 
-    GROUP BY Job_Title__c
-    """
-
-    active_titles_result = sf.query(active_titles_query)
-    active_titles = [record['Job_Title__c'] for record in active_titles_result.get('records', [])]
-
-    if not active_titles:
-        return {
-            'active_users': 0,
-            'potential_inactive_users': 0,
-            'total_addressable': 0
-        }
-
-    # Step 2: Count active users in the target account
-    active_users_query = f"""
-    SELECT Id 
-    FROM Contact 
-    WHERE AccountId = '{account_id}' 
-      AND Active__c = TRUE
-    """
-
-    active_users_result = sf.query(active_users_query)
-    active_users_count = len(active_users_result.get('records', []))
-
-    # Step 3: Find inactive users in the target account with matching job titles
-    formatted_titles = "', '".join(active_titles)
-    inactive_users_query = f"""
-    SELECT Id 
-    FROM Contact 
-    WHERE AccountId = '{account_id}' 
-      AND Active__c = FALSE 
-      AND Job_Title__c IN ('{formatted_titles}')
-    """
-
-    inactive_users_result = sf.query(inactive_users_query)
-    potential_inactive_count = len(inactive_users_result.get('records', []))
-
-    # Step 4: Calculate total addressable users
-    total_addressable = active_users_count + potential_inactive_count
-    #print(f"Active Users: {active_users_count}, Potential Inactive Users: {potential_inactive_count}, Total Addressable: {total_addressable}")
-    return total_addressable
-
-
-def format_tendering_volume(value):
-    if value is None:
-        return "Not specified"
-    
-    if isinstance(value, str) and value.lower() == 'unlimitiert':
-        return "Unlimitiert"
-    
-    try:
-        # Convert number to: "X million €"
-        formatted_value = f"€{float(value):,.0f} million"
-        return formatted_value
-    except ValueError:
-        return "Unknown"
 
 def main():
     try:
@@ -96,7 +28,7 @@ def main():
 
         print("📡 Query Salesforce for target account...")
         query = """
-            SELECT Id, Name, Acquired_Licenses__c, Active_Users__c, Number_of_User_with_75_Activity_Score__c, Acquired_Tendering_volume__c, Bid_Packages_Tot_last_365_Days__c 
+            SELECT Id, Name, Acquired_Licenses__c, Active_Users__c, Number_of_User_with_75_Activity_Score__c, Acquired_Tendering_volume__c, Bid_Packages_Tot_last_365_Days__c, NumberOfEmployees 
             FROM Account 
             WHERE Id = '00109000013HnuHAAS'
         """
@@ -111,10 +43,16 @@ def main():
             users_at_75_activity = acc.get("Number_of_User_with_75_Activity_Score__c")
             acquired_tendering_volume = acc.get("Acquired_Tendering_volume__c")
             tendering_last_year = acc.get("Bid_Packages_Tot_last_365_Days__c")
+            number_of_employees = acc.get("NumberOfEmployees", 0)
 
             # Format tendering volume            
             formatted_acquired_tend_volume = format_tendering_volume(acquired_tendering_volume)           
             potential_users_count = get_potential_users(sf, accountid)
+            top_users = get_top_user_usage_metrics(sf, accountid)
+            top_users_str = "\n".join([
+                f"{user['name']} (Activity Days: {user['activity_days']}, Bid Packages: {user['bid_packages']})"
+                for user in top_users
+            ])
 
              # Initialize full_summary here
             full_summary = ""
@@ -164,7 +102,6 @@ def main():
                 # Executive Summary for {account_name}
 
                 ## 1. Licences Purchased
-
                 ### Question: How many licences have been purchased?
                 \n
                 {answer1}
@@ -195,7 +132,6 @@ def main():
             # Combine Results
             full_summary += f"""
             ## 2. Usage vs. Purchase Comparison
-
             ### Question: How does the usage of these licences compare? (Active Users vs Total Licences)
             \n
             {answer2}
@@ -224,7 +160,6 @@ def main():
             # Combine Results
             full_summary += f"""
             ## 3. 75% Usage Threshold
-
             ### Question: Are all licences used at a 75% activity rate or higher?
             \n
             {answer3}
@@ -253,7 +188,6 @@ def main():
             # Combine Results
             full_summary += f"""
             ## 4. Reasons for Below Expectations Usage
-
             ### Question: If the usage is below expectations, has the reason been explored or discussed?
             \n
             {answer4}
@@ -282,7 +216,6 @@ def main():
             # Combine Results
             full_summary += f"""
             ## 5. Acquired Tendering Volume vs Used Tendering Volume
-
             ### Question: What is the tendering volume that has been purchased by the customer and how does the tendering volume in the last 365 days compare to this purchase volume? 
             If the volume is below expectations has the reason been explored / discussed?
             \n
@@ -337,7 +270,6 @@ def main():
             # Combine Results
             full_summary += f"""
             ## 7. Active Users vs Potential Users
-
             ### Question: How do the number of used licences compare with possible users (Summe von Einkauf, Kalkulation, Arbeitsvorbereitung)?
             \n
             {answer7}
@@ -367,7 +299,6 @@ def main():
             # Combine Results
             full_summary += f"""
             ## 8. Customer Sentiment
-
             ### Question: Is the customer positive or negative based on the sentiment of the last meeting?
             \n
             {answer8}
@@ -470,6 +401,106 @@ def main():
             {answer12}
             \n\n"""
 
+
+
+            # Build Prompt for Question 13
+            prompt13 = create_prompt_question_13(   
+                account_name=account_name,                
+                meeting_notes = meeting_notes,
+                latest_meeting_date=latest_meeting_date                  
+            )   
+            # Ask Gemini Question 13
+            try:
+                print("\n📌 Sending to Gemini (Question 13):")
+                response13 = model.generate_content(prompt13)
+                answer13 = response13.candidates[0].content.parts[0].text.strip()   
+            except Exception as e:
+                print(f"❌ Gemini error 13: {e}")
+                candidate = "(Error generating summary)"        
+
+            # Combine Results
+            full_summary += f"""    
+            ## 13. Summary of last Touchpoint:
+
+            ### Question: When was the last touchpoint with the customer?
+            Last Touchpoint: {answer13}
+            \n\n"""
+
+
+
+            # Build Prompt for Question 14
+            prompt14 = create_prompt_question_14(   
+                account_name=account_name,                
+                meeting_notes = meeting_notes,
+                latest_meeting_date=latest_meeting_date                  
+            )
+
+            # Ask Gemini Question 14
+            try:
+                print("\n📌 Sending to Gemini (Question 14):")
+                response14 = model.generate_content(prompt14)
+                answer14 = response14.candidates[0].content.parts[0].text.strip()   
+            except Exception as e:
+                print(f"❌ Gemini error 14: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 14. Product Feedback
+            ### Question: What is the product feedback from the customer?
+            \n
+            {answer14}
+            \n\n"""
+
+
+
+            #Build Prompt for Question 15
+            prompt15 = create_prompt_question_15(   
+                account_name=account_name,                
+                meeting_notes = meeting_notes,
+                                  
+            )   
+            # Ask Gemini Question 15
+            try:
+                print("\n📌 Sending to Gemini (Question 15):")
+                response15 = model.generate_content(prompt15)
+                answer15 = response15.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 15: {e}")
+                candidate = "(Error generating summary)"
+            # Combine Results
+            full_summary += f"""
+            ## 15. Contact Person:
+            ### Question: Who is the decision maker?
+                          Who signed the contract? Who is the contact person listed on the contract?
+                          Who is the champion?
+
+            \n
+            {answer15}
+            \n\n"""
+
+
+            #Build Prompt for Question 16   
+            prompt16 = create_prompt_question_16(   
+                account_name=account_name,
+                top_users=top_users_str                                                
+            )
+            # Ask Gemini Question 16
+            try:
+                print("\n📌 Sending to Gemini (Question 16):")
+                response16 = model.generate_content(prompt16)
+                answer16 = response16.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 16: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 16. Top 5 most important users:
+            ### Question: Who are the top 5 most important users based on usage metrics (# active days, # bid packages)?
+            \n
+            {answer16}
+            \n\n"""
 
 
             ###################################################################

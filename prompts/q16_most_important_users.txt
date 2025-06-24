@@ -1,0 +1,11 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+Salesforce Data:
+- Top 5 most important users: {top_users}
+
+
+Based on this information, please answer the following question clearly:
+
+ Who are the top 5 most important users based on usage metrics (# Days with activity Last 90 Days, # Bid Packages Published L90D)?
+
+Please format your response as a short, concise answer.

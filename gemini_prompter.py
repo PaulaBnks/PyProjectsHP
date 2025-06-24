@@ -194,3 +194,55 @@ def create_prompt_question_12(account_name, meeting_notes, latest_meeting_date):
         latest_meeting_date=latest_meeting_date
     )
     return filled_prompt12
+
+def create_prompt_question_13(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 13: Open Tasks
+    """
+    template = load_prompt_template("q13_last_touchpoint.txt")
+
+    filled_prompt13 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt13
+
+
+def create_prompt_question_14(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 14: Product Feedback
+    """
+    template = load_prompt_template("q14_product_feedback.txt")
+
+    filled_prompt14 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt14
+
+
+def create_prompt_question_15(account_name, meeting_notes):
+    """
+    Builds the prompt for Question 15: Contact Person:
+    """
+    template = load_prompt_template("q15_contact_person.txt")
+
+    filled_prompt15 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes        
+    )
+    return filled_prompt15
+
+def create_prompt_question_16(account_name, top_users):
+    """
+    Builds the prompt for Question 16: Top 5 most important users:
+    """
+    template = load_prompt_template("q16_most_important_users.txt")
+
+    filled_prompt16 = template.format(
+        account_name=account_name,     
+        top_users=top_users       
+    )
+    return filled_prompt16

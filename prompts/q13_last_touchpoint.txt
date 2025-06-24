@@ -1,0 +1,23 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+The most recent touchpoint with this customer was on {latest_meeting_date}.
+
+Meeting Notes:
+"{meeting_notes}"
+
+Please note:
+
+    The "Participants" section of the meeting notes lists attendees from both Cosuno and the customer.
+
+    The person listed under Cosuno should be treated as the Customer Success Manager (CSM).
+
+Based on this information, please answer the following question clearly:
+
+    From the {meeting_notes} answer the following in bullet points
+        - When was the last structured meeting with the customer?
+        - Participants of the meeting?
+        - Sentiment of the last meeting?
+        - Executive Summary of the meeting / key takeaways?
+
+
+Please format your response as a short, concise answer.

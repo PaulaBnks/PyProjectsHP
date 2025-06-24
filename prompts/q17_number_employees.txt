@@ -1,0 +1,11 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+Salesforce Data:
+- Total number of employees: {number_of_employees}
+
+
+Based on this information, please answer the following question clearly:
+
+ What is the total number of employees for the account {account_name}?
+
+Please format your response as a short, concise answer.

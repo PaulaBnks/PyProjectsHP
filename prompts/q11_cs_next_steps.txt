@@ -1,0 +1,18 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+The most recent touchpoint with this customer was on {latest_meeting_date}.
+
+Meeting Notes:
+"{meeting_notes}"
+
+Please note:
+
+    The "Participants" section of the meeting notes lists attendees from both Cosuno and the customer.
+
+    The person listed under Cosuno should be treated as the Customer Success Manager (CSM).
+
+Based on this information, please answer the following question clearly:
+
+What are the next steps defined by the Customer Success Manager (i.e., the Cosuno participant) from the meeting in {meeting_notes} held on {latest_meeting_date}?
+
+Please format your response as a short, concise paragraph.

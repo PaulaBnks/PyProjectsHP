@@ -1,0 +1,12 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+The most recent touchpoint with this customer was on {latest_meeting_date}.
+
+Meeting Notes:
+"{meeting_notes}"
+
+Based on this information, please answer the following question clearly:
+
+ What are the next steps that were agreed upon in the last meeting from {meeting_notes} held on {latest_meeting_date}?
+
+Please format your response as a short, concise paragraph.

@@ -1,0 +1,12 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+
+Salesforce Data:
+    - Used Licences: {active_users}
+    - Potential_Users: {potential_users_count}
+
+Based on this information, please answer the following question clearly:
+
+ How do the number of used licences compare with possible users?
+
+Please format your response as a short, concise paragraph.

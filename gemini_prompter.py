@@ -100,14 +100,97 @@ def create_prompt_question_5(account_name, acquired_tendering_volume, tendering_
     )
     return filled_prompt5
 
-def create_prompt_question_6(account_name, meeting_notes):
+def create_prompt_question_6(account_name, acquired_tendering_volume, meeting_notes ):
     """
-    Builds the prompt for Question 6: Customer Sentiment
+    Builds the prompt for Question 6: Actual vs Potential Tendering Volume
     """
-    template = load_prompt_template("q6_customer_sentiment.txt")
+    template = load_prompt_template("q6_actual_vs_possible_tendering_volume.txt")
 
     filled_prompt6 = template.format(
         account_name=account_name,       
+        acquired_tendering_volume=acquired_tendering_volume,
         meeting_notes=meeting_notes
     )
     return filled_prompt6
+
+
+def create_prompt_question_7(account_name, active_users, potential_users_count ):
+    """
+    Builds the prompt for Question 7: Active Users vs Potential Users
+    """
+    template = load_prompt_template("q7_active_vs_potential_users.txt")
+
+    filled_prompt7 = template.format(
+        account_name=account_name,       
+        active_users=active_users,
+        potential_users_count=potential_users_count
+    )
+    return filled_prompt7
+
+
+
+def create_prompt_question_8(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 8: Customer Sentiment
+    """
+    template = load_prompt_template("q8_customer_sentiment.txt")
+
+    filled_prompt8 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt8
+
+def create_prompt_question_9(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 9: Next meeting date
+    """
+    template = load_prompt_template("q9_next_meeting.txt")
+
+    filled_prompt9 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt9
+
+
+def create_prompt_question_10(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 10: Next steps
+    """
+    template = load_prompt_template("q10_next_steps.txt")
+
+    filled_prompt10 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt10
+
+def create_prompt_question_11(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 11: CSM Next steps 
+    """
+    template = load_prompt_template("q11_cs_next_steps.txt")
+
+    filled_prompt11 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt11
+
+def create_prompt_question_12(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 12: Open Tasks
+    """
+    template = load_prompt_template("q12_open_tasks.txt")
+
+    filled_prompt12 = template.format(
+        account_name=account_name,       
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt12

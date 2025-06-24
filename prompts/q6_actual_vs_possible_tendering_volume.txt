@@ -1,17 +1,15 @@
 You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
 
+
 Salesforce Data:
-- Acquired Tendering Volume: {acquired_tendering_volume}
-- Tendering Volume (Last 365 Days): {tendering_last_year}
+    - Acquired Tendering Volume: {acquired_tendering_volume}
 
 Meeting Notes:
 "{meeting_notes}"
 
-
 Based on this information, please answer the following question clearly:
 
- What is the tendering volume that has been purchased by the customer and how does the tendering volume in the last 365 days compare to this purchased volume? 
- If the volume is below expectations has the reason been explored / discussed in {meeting_notes}?
+ How does the acquired tendering volume compare to the possible tendering volume discussed by the customer in {meeting_notes}?
 
  If the acquired volume is "Unlimitiert", it means that the customer has unlimited access and can have as many users as they wish.
 

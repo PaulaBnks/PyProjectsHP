@@ -1,5 +1,7 @@
 You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
 
+The most recent touchpoint with this customer was on {latest_meeting_date}.
+
 Salesforce Data:
 
 
@@ -12,7 +14,6 @@ Based on the information in {meeting_notes}, please answer the following questio
 Is the customer positive or negative based on the sentiment of the last meeting? On a scale if 1-10 (with 10 being the highest possible score), how happy is the customer? What is the customer satisfied with and what is the customer not happy with?
 When was the last touchpoint with the decision maker?
 Has the customer mentioned any contractually relevant information in recent meetings (e.g. contract volume, price, budget), etc.?
-
 
 
 Please format your response as a short, concise paragraph.

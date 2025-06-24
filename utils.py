@@ -13,9 +13,14 @@ def chunked(iterable, size):
         yield chunk
 
 def is_recent(date_str):
-    """Check if a note is recent (within last 180 days)"""
     try:
-        record_date = datetime.strptime(date_str[:10], "%Y-%m-%d")
-        return (datetime.now() - record_date) < timedelta(days=180)
-    except Exception:
+        if not date_str:
+            return False
+        # Normalize date string (remove time part if needed)
+        date_clean = date_str.split("T")[0]
+        record_date = datetime.strptime(date_clean, "%Y-%m-%d")
+        is_recent_flag = (datetime.now() - record_date) < timedelta(days=180)
+        return is_recent_flag
+    except Exception as e:
+        print(f"❌ Error parsing date '{date_str}': {e}")
         return False

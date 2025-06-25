@@ -295,3 +295,27 @@ def create_prompt_question_18(sow_data, meeting_notes):
         return filled_prompt
     except KeyError as e:
         raise KeyError(f"Missing required placeholder in prompt template: {e}")
+
+
+def create_prompt_question_19(contract_data):
+    """
+    Builds the prompt for Question 19: Contract Details
+    """
+    account_name = contract_data.get('account_name')
+    template = load_prompt_template("q19_contract_data.txt")
+
+    filled_prompt19 = template.format(
+        account_name=account_name,
+        start_date=contract_data['contract']['start_date'] or "N/A",
+        end_date=contract_data['contract']['end_date'] or "N/A",
+        last_possible_termination_date=contract_data['contract']['last_possible_termination_date'] or "N/A",
+        packages_purchased=", ".join(contract_data['contract']['packages_purchased']),
+        user_limit=contract_data['contract']['user_limit'],
+        tendering_volume_limit=contract_data['contract']['tendering_volume_limit'],
+        project_limit=contract_data['contract']['project_limit'],
+        arr_before_discount_net=contract_data['contract']['arr_before_discount_net'],
+        current_discount_rate=contract_data['contract']['current_discount_rate'],
+        arr_after_discount_net=contract_data['contract']['arr_after_discount_net']
+    )
+
+    return filled_prompt19

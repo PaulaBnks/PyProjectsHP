@@ -6,13 +6,15 @@ from gemini_prompter import (
     setup_gemini, create_prompt_question_1, create_prompt_question_2, create_prompt_question_3,
     create_prompt_question_4, create_prompt_question_5, create_prompt_question_6, create_prompt_question_7, create_prompt_question_8,
     create_prompt_question_9, create_prompt_question_10, create_prompt_question_11, create_prompt_question_12, create_prompt_question_13,
-    create_prompt_question_14, create_prompt_question_15, create_prompt_question_16, create_prompt_question_17, create_prompt_question_18
+    create_prompt_question_14, create_prompt_question_15, create_prompt_question_16, create_prompt_question_17, create_prompt_question_18,
+    create_prompt_question_19
 )
 
 from note_extractor import extract_note_content
 from doc_writer import get_google_docs_service, clear_and_update_google_doc
 from utils import chunked, is_recent
-from salesforce_functions import get_potential_users, format_tendering_volume, get_top_user_usage_metrics,get_account_organization_insights, get_share_of_wallet_data
+from salesforce_functions import (get_potential_users, format_tendering_volume, get_top_user_usage_metrics,get_account_organization_insights,
+ get_share_of_wallet_data, get_contract_data)
 from datetime import datetime, timedelta
 
 DOCUMENT_ID = '1hISTyvQ_r-DVI3n3kfRQ9WGQiHcBvLMgh48M4zIuhkc'
@@ -69,7 +71,7 @@ def main():
                 # The tendering volume is already nicely formatted by Salesforce
                 sow_data['estimate_tendering_volume'] = sow_data['estimate_tendering_volume'] or "Not specified"
 
-
+            contract_data = get_contract_data(sf, accountid)
 
              # Initialize full_summary here
             full_summary = ""
@@ -565,6 +567,29 @@ def main():
             ### Question: What are the total number of projects that the customer is expected to process this year / in the next 12 months / annually?
             \n
             {answer18}
+            \n\n"""
+
+
+
+            #Build Prompt for Question 19
+            prompt19 = create_prompt_question_19(                  
+                contract_data=contract_data                                            
+            )       
+            # Ask Gemini Question 18
+            try:
+                print("\n📌 Sending to Gemini (Question 19):")
+                response19 = model.generate_content(prompt19)
+                answer19 = response19.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 19: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 19. Contract Details:
+            ### Question: What are the contract details?
+            \n
+            {answer19}
             \n\n"""
 
 

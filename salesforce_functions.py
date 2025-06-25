@@ -3,18 +3,17 @@ import os
 from utils import chunked, is_recent
 from datetime import datetime, timedelta
 
-def get_contract_data(account_id):
+def get_contract_data(sf, account_id):
     """
     Fetches ServiceContract and related ContractLineItem data for a given Account ID.
-    
+
     Returns:
         dict: Dictionary containing structured contract and account data.
     """
 
     # Initialize result dictionary with default values
     result = {
-        "account_name": "",
-        "number_of_employees": None,
+        "account_name": "",        
         "contract": {
             "start_date": None,
             "end_date": None,
@@ -42,12 +41,17 @@ def get_contract_data(account_id):
     # Query ServiceContract and ContractLineItems
     contract_query = f"""
         SELECT Id, StartDate, EndDate, Last_possible_termination_date__c, 
-               ARR_before_discount_net__c, Discount_Rate__c, ARR_after_discount_net__c,
-               (SELECT Product_or_Package__c, Number_of_user_licenses_new__c, 
-                       Tendering_Volume_new__c, Max_number_of_projects_new__c
-                FROM ContractLineItems)
+            ARR_before_discount_net__c, Discount_Rate__c, ARR_after_discount_net__c,
+            (SELECT Id, Product2Id, Product2.Name, 
+                    Number_of_user_licenses_new__c, 
+                    Tendering_Volume_new__c, 
+                    Max_number_of_projects_new__c
+             FROM ContractLineItems ORDER BY UnitPrice DESC LIMIT 1)
         FROM ServiceContract
-        WHERE AccountId = '{account_id}' and Status = 'Active' order by Arr_after_discount_net__c DESC LiMIT 1
+        WHERE AccountId = '{account_id}' 
+          AND Status = 'Active'
+        ORDER BY ARR_after_discount_net__c DESC
+        LIMIT 1
     """
 
     contract_result = sf.query(contract_query)
@@ -56,39 +60,47 @@ def get_contract_data(account_id):
         service_contract = contract_result['records'][0]
 
         # Map contract-level fields
-        result["contract"]["start_date"] = service_contract.get("StartDate")
-        result["contract"]["end_date"] = service_contract.get("EndDate")
-        result["contract"]["last_possible_termination_date"] = service_contract.get("Last_possible_termination_date__c")
-        result["contract"]["arr_before_discount_net"] = service_contract.get("ARR_before_discount_net__c", 0)
-        result["contract"]["current_discount_rate"] = service_contract.get("Discount_Rate__c", 0)
-        result["contract"]["arr_after_discount_net"] = service_contract.get("ARR_after_discount_net__c", 0)
+        contract = result["contract"]
+        contract["start_date"] = service_contract.get("StartDate")
+        contract["end_date"] = service_contract.get("EndDate")
+        contract["last_possible_termination_date"] = service_contract.get("Last_possible_termination_date__c")
+        contract["arr_before_discount_net"] = service_contract.get("ARR_before_discount_net__c", 0)
+        contract["current_discount_rate"] = service_contract.get("Discount_Rate__c", 0)
+        contract["arr_after_discount_net"] = service_contract.get("ARR_after_discount_net__c", 0)
 
-        # Process Contract Line Items
+        # Process Contract Line Items (only one item due to LIMIT 1)
         line_items = service_contract.get("ContractLineItems", {}).get("records", [])
         packages = []
-        user_limit = 0
-        tendering_volume = 0
-        project_limit = 0
 
-        for item in line_items:
-            product_name = item.get("Product_or_Package__c", "")
+        if line_items:
+            item = line_items[0]
+
+            # Safely get the product name from the nested Product2 relationship
+            product_data = item.get("Product2") or {}
+            product_name = product_data.get("Name", "")
+
             if product_name and "paket" in product_name.lower():
                 packages.append(product_name)
 
-            user_limit += item.get("Number_of_user_licenses_new__c", 0) or 0
-            tendering_volume += item.get("Tendering_Volume_new__c", 0) or 0
-            project_limit += item.get("Max_number_of_projects_new__c", 0) or 0
+            def parse_limit(val):
+                if isinstance(val, str) and val.strip().lower() == "unlimitiert":
+                    return "Unlimitiert"
+                try:
+                    return int(val)
+                except (ValueError, TypeError):
+                    return 0
 
-        result["contract"]["packages_purchased"] = list(set(packages)) or ["None"]
-        result["contract"]["user_limit"] = user_limit
-        result["contract"]["tendering_volume_limit"] = tendering_volume
-        result["contract"]["project_limit"] = project_limit
-
+            contract["user_limit"] = parse_limit(item.get("Number_of_user_licenses_new__c"))
+            contract["tendering_volume_limit"] = parse_limit(item.get("Tendering_Volume_new__c"))
+            contract["project_limit"] = parse_limit(item.get("Max_number_of_projects_new__c"))
+            contract["packages_purchased"] = list(set(packages)) or ["None"]
+        else:
+            contract["packages_purchased"] = ["None"]
     else:
-        # No ServiceContract found for this account
         result["contract"]["packages_purchased"] = ["None"]
 
     return result
+
 
 
 
@@ -202,7 +214,7 @@ def get_account_organization_insights(sf, account_id):
     kalkulation = count_contacts_by_department(["Kalkulation", "Calculation"], ["Leiter Kalkulation", "Head of Calculation", "Calculation Manager"])
 
     # Arbeitsvorbereitung
-    arbeitsvorbereitung = count_contacts_by_department(["Arbeitsvorbereitung", "Preparation"], ["Leiter Arbeitsvorbereitung", "Head of Preparation", "AV Manager"])
+    arbeitsvorbereitung = count_contacts_by_department(["Arbeitsvorbereitung", "Preparation", "Preparation Back Office"],["Leiter Arbeitsvorbereitung", "Head of Preparation", "AV Manager"])
 
     # Departments to check for Cosuno relevance
     cosuno_departments = ["Bauleitung", "Projektmanagement", "Construction Management", "Digitalisierungsabteilung"]

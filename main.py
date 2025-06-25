@@ -6,13 +6,13 @@ from gemini_prompter import (
     setup_gemini, create_prompt_question_1, create_prompt_question_2, create_prompt_question_3,
     create_prompt_question_4, create_prompt_question_5, create_prompt_question_6, create_prompt_question_7, create_prompt_question_8,
     create_prompt_question_9, create_prompt_question_10, create_prompt_question_11, create_prompt_question_12, create_prompt_question_13,
-    create_prompt_question_14, create_prompt_question_15, create_prompt_question_16
+    create_prompt_question_14, create_prompt_question_15, create_prompt_question_16, create_prompt_question_17, create_prompt_question_18
 )
 
 from note_extractor import extract_note_content
 from doc_writer import get_google_docs_service, clear_and_update_google_doc
 from utils import chunked, is_recent
-from salesforce_functions import get_potential_users, format_tendering_volume, get_top_user_usage_metrics
+from salesforce_functions import get_potential_users, format_tendering_volume, get_top_user_usage_metrics,get_account_organization_insights, get_share_of_wallet_data
 from datetime import datetime, timedelta
 
 DOCUMENT_ID = '1hISTyvQ_r-DVI3n3kfRQ9WGQiHcBvLMgh48M4zIuhkc'
@@ -37,7 +37,7 @@ def main():
 
         for acc in accounts:
             accountid = acc['Id']
-            account_name = acc.get('Name', 'Unknown')
+            account_name = acc.get('Name')
             acquired_licenses = acc.get("Acquired_Licenses__c")
             active_users = acc.get("Active_Users__c")
             users_at_75_activity = acc.get("Number_of_User_with_75_Activity_Score__c")
@@ -53,6 +53,23 @@ def main():
                 f"{user['name']} (Activity Days: {user['activity_days']}, Bid Packages: {user['bid_packages']})"
                 for user in top_users
             ])
+            insight = get_account_organization_insights(sf, accountid)
+            if 'error' in insight:
+                print(f"❌ Error fetching insights: {insight['error']}")
+            
+           
+            sow_data = get_share_of_wallet_data(sf, accountid)
+            if 'error' in sow_data:
+                print(f"❌ Error fetching share of wallet data: {sow_data['error']}")   
+            else:
+                # Enhance data dict with formatted values only where needed
+                sow_data['estimate_projects'] = sow_data['estimate_projects'] or "Not specified"                
+                sow_data['actuals_provided'] = "Yes" if sow_data['actuals_provided'] else "No"                
+
+                # The tendering volume is already nicely formatted by Salesforce
+                sow_data['estimate_tendering_volume'] = sow_data['estimate_tendering_volume'] or "Not specified"
+
+
 
              # Initialize full_summary here
             full_summary = ""
@@ -501,6 +518,55 @@ def main():
             \n
             {answer16}
             \n\n"""
+
+
+
+
+            #Build Prompt for Question 17
+            prompt17 = create_prompt_question_17(                  
+                insight=insight                                                
+            )       
+            # Ask Gemini Question 17
+            try:
+                print("\n📌 Sending to Gemini (Question 17):")
+                response17 = model.generate_content(prompt17)
+                answer17 = response17.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 17: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 17. Organisation Structure:
+            ### Question: What is the organisation structure of the customer?
+            \n
+            {answer17}
+            \n\n"""
+
+
+
+            #Build Prompt for Question 18
+            prompt18 = create_prompt_question_18(                  
+                sow_data=sow_data,
+                meeting_notes=meeting_notes,                                                
+            )       
+            # Ask Gemini Question 18
+            try:
+                print("\n📌 Sending to Gemini (Question 18):")
+                response18 = model.generate_content(prompt18)
+                answer18 = response18.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 18: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 18. Share of Wallet:
+            ### Question: What are the total number of projects that the customer is expected to process this year / in the next 12 months / annually?
+            \n
+            {answer18}
+            \n\n"""
+
 
 
             ###################################################################

@@ -1,0 +1,22 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data.
+
+Salesforce Data:
+- Account Name: {account_name}
+- Total Number of Employees: {number_of_employees}
+
+Organizational Insights:
+- Einkauf: {einkauf_status}, Count: {einkauf_count}, Has Head: {einkauf_head_status}
+- Kalkulation: {kalkulation_status}, Count: {kalkulation_count}, Has Head: {kalkulation_head_status}
+- Arbeitsvorbereitung: {arbeitsvorbereitung_status}, Count: {arbeitsvorbereitung_count}, Has Head: {arbeitsvorbereitung_head_status}
+- Cosuno-Relevant Departments: {cosuno_departments_list}
+- Other Departments: {other_departments_list}
+
+Based on this information, please answer the following clearly:
+
+1. Total number of employees within the organisation?
+2. Einkauf - Is there a purchasing department? How many employees are active in the purchasing department? Is there a Head of Purchasing?
+3. Kalkulation - Is there a calculation department? How many employees are active in the calculation department? Is there a Head of Calculation?
+4. Arbeitsvorbereitung - Is there a Abteilung Arbeitsvorbereitung? How many employees are active in the Abteilung Arbeitsvorbereitung? Is there a Leiter Arbeitsvorbereitung?
+5. What other departments exist within the company for which Cosuno could be relevant? Bauleitung? Projektmanagement? Construction Management? Digitalisierungsabteilung?
+
+Please format your response as a short, concise answer.

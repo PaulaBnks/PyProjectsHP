@@ -1,0 +1,23 @@
+    You are a business analyst tasked with summarizing customer intent and potential for Cosuno based on Salesforce data and multiple meeting notes. 
+
+    Salesforce Data (Share of Wallet):  
+
+        Estimated number of projects in 2025: {estimate_projects}
+        Estimated tendering volume (€): {estimate_tendering_volume}
+        Have actual project names been provided? {actuals_provided}
+         
+
+    Meeting Notes (multiple meetings): 
+    {meeting_notes} 
+
+    Based on this information, please answer the following clearly and concisely: 
+
+        What are the estimated number of projects that the customer is expected to process this year?
+        What is the expected tendering volume in € that the customer is expected to process this year?
+        From the meeting notes (considering all discussions), what is the expected share of wallet that the customer wants to process through Cosuno?
+        From the meeting notes (considering all discussions), what percent of tenders will be processed through Cosuno?
+        From the meeting notes (considering all discussions), if not all tenders are to be processed through Cosuno, what are the reasons for some tenders not being processed through Cosuno?
+         
+
+    Please format your response as a short, concise paragraph. 
+     

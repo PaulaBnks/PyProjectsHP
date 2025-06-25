@@ -246,3 +246,52 @@ def create_prompt_question_16(account_name, top_users):
         top_users=top_users       
     )
     return filled_prompt16
+
+
+def create_prompt_question_17(insight):
+    """
+    Builds the prompt for Question 17: Organisation Structure:
+    """
+    # Add precomputed strings for clarity
+    processed_insight = {
+        **insight,
+        'einkauf_status': 'Exists' if insight['einkauf_exists'] else 'Not Found',
+        'einkauf_head_status': 'Yes' if insight['einkauf_has_head'] else 'No',
+        
+        'kalkulation_status': 'Exists' if insight['kalkulation_exists'] else 'Not Found',
+        'kalkulation_head_status': 'Yes' if insight['kalkulation_has_head'] else 'No',
+        
+        'arbeitsvorbereitung_status': 'Exists' if insight['arbeitsvorbereitung_exists'] else 'Not Found',
+        'arbeitsvorbereitung_head_status': 'Yes' if insight['arbeitsvorbereitung_has_head'] else 'No',
+        
+        'cosuno_departments_list': ', '.join([f"{d['department']} ({d['count']} users)" for d in insight['cosuno_relevant_departments']]),
+        'other_departments_list': ', '.join(insight['other_departments']) if insight['other_departments'] else 'None'
+    }
+
+    template = load_prompt_template("q17_org_structure.txt")
+    return template.format(**processed_insight)
+
+
+def create_prompt_question_18(sow_data, meeting_notes):
+    """
+    Builds the prompt for Question 18: Share of Wallet
+    """
+    # Load the template
+    template = load_prompt_template("q18_share_of_wallet.txt")
+
+    # Ensure all required keys are present and handle None values
+    safe_data = {
+        key: str(value) if value is not None else "Not specified"
+        for key, value in sow_data.items()
+    }
+    safe_data['actuals_provided'] = "Yes" if sow_data.get('actuals_provided') else "No"    
+
+    # Add meeting notes
+    safe_data['meeting_notes'] = meeting_notes or "No meeting notes provided."
+
+    
+    try:
+        filled_prompt = template.format(**safe_data)
+        return filled_prompt
+    except KeyError as e:
+        raise KeyError(f"Missing required placeholder in prompt template: {e}")

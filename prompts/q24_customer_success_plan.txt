@@ -1,0 +1,20 @@
+You are a Customer Success Manager tasked with generating a summary based on initial customer conversations and internal notes.
+
+Meeting Notes:
+"{meeting_notes}"
+
+Based on the notes({meeting_notes}) taken during the first two months since {account_name} started using Cosuno (from {start_date} to {end_date}), please extract and summarize the following:
+
+1. Pain Points:
+   What were the main challenges or inefficiencies the customer faced in their tendering process before purchasing Cosuno?
+
+2. Objectives for Cosuno:
+   How did the customer expect Cosuno to help overcome these challenges?
+
+3. Success Parameters:
+   What outcomes or capabilities should Cosuno deliver within the first 6 months for the customer to consider this implementation a success?
+
+4. Milestones:
+   What specific milestones or deliverables were agreed upon during the early stages of the engagement?
+
+Please format your response clearly under each heading, keeping it concise and easy to reference internally.

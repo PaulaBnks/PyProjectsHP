@@ -1,0 +1,12 @@
+Du bist ein Business Analyst beauftragt mit der Erstellung einer Executive Summary basierend auf Salesforce Kunden Account Daten und Meeting Notes.
+
+Salesforce Daten:
+- Erworbene Lizenzen: {acquired_licenses}
+- Aktive Lizenzen: {active_users}
+- Anzahl der Nutzer mit ≥75% Aktivitäts-Score: {users_at_75_activity}
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+Sind alle Lizenzen mit 75% Aktivitätsrate genutzt?
+
+Bitte formatiere deine Antwort als ein kurzer, prägnanter Paragraph.

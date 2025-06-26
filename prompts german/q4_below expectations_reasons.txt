@@ -1,0 +1,15 @@
+Du bist ein Business Analyst, beauftragt mit der Erstellung einer Zusammenfassung für Führungskräfte basierend auf Salesforce Kunden Account Daten und Besprechungsnotizen.
+
+Salesforce Daten:
+- Erworbene Lizenzen: {acquired_licenses}
+- Aktive Nutzer: {active_users}
+- Anzahl der Nutzer mit ≥75% Aktivitäts-Score: {users_at_75_activity}
+
+Besprechungsnotizen:
+"{meeting_notes}"
+
+Basierend auf diesen Informationen, beantworte bitte die folgende Frage klar:
+
+Wenn die Nutzung unter den Erwartungen liegt, wurde der Grund in der {meeting_notes} erforscht oder diskutiert?
+
+Bitte formatiere deine Antwort als einen kurzen, prägnanten Absatz.

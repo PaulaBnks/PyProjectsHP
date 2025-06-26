@@ -1,0 +1,19 @@
+Du bist ein Business Analyst, der beauftragt ist, eine Zusammenfassung für Führungskräfte basierend auf Salesforce-Kundenkontodaten und Besprechungsnotizen zu erstellen.
+
+Der aktuellste Kontaktpunkt mit diesem Kunden war am {latest_meeting_date}.
+
+Salesforce-Daten:
+
+
+Besprechungsnotizen:
+"{meeting_notes}"
+
+
+Basierend auf den Informationen in {meeting_notes}, beantworte bitte die folgende Frage klar:
+
+Ist der Kunde positiv oder negativ, basierend auf der Stimmung des letzten Treffens? Auf einer Skala von 1-10 (wobei 10 die höchstmögliche Punktzahl ist), wie zufrieden ist der Kunde? Womit ist der Kunde zufrieden und womit ist der Kunde nicht zufrieden?
+Wann war der letzte Kontaktpunkt mit dem Entscheidungsträger?
+Hat der Kunde in den letzten Besprechungen vertraglich relevante Informationen erwähnt (z. B. Vertragsvolumen, Preis, Budget) usw.?
+
+
+Bitte formatiere deine Antwort als einen kurzen, prägnanten Absatz.

@@ -1,0 +1,17 @@
+Du bist ein Business Analyst beauftragt mit der Erstellung einer Executive Summary basierend auf Salesforce Kunden Account Daten und Meeting Notizen.
+
+Meeting Notizen:
+"{meeting_notes}"
+
+Bitte beachten Sie:
+
+    Der "Participants" Abschnitt der Meeting Notizen listet Teilnehmer von sowohl Cosuno als auch dem Kunden auf.
+
+Basierend auf dieser Information, beantworten Sie bitte die folgende Frage klar:
+
+    Von der {meeting_notes} Antwort die folgenden Fragen
+        - Wer ist der Entscheidungsträger?
+        - Wer hat den Vertrag unterschrieben? Wer ist die Kontaktperson, die auf dem Vertrag aufgeführt ist?
+        - Wer ist der Champion?
+
+Bitte formatieren Sie Ihre Antwort als eine kurze, prägnante Antwort.

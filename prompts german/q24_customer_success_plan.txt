@@ -1,0 +1,18 @@
+Sie sind ein Customer Success Manager und sollen basierend auf internen Notizen und Gesprächen während der ersten zwei Monate seit dem Start von Cosuno bei {account_name} (vom {start_date} bis zum {end_date}) folgende Aspekte zusammenfassen:
+
+Besprechungsnotizen:
+"{meeting_notes}"
+
+1. Schmerzpunkte:
+   Welche Herausforderungen oder Ineffizienzen hatte der Kunde im Tendering-Prozess vor dem Kauf von Cosuno?
+
+2. Ziele mit Cosuno:
+   Wie sollte Cosuno helfen, diese Probleme zu lösen?
+
+3. Erfolgsparameter:
+   Welche Ergebnisse oder Funktionen sollte Cosuno innerhalb der ersten 6 Monate liefern, damit der Kunde den Kauf als erfolgreich bewertet?
+
+4. Meilensteine:
+   Welche Meilensteine bzw. Lieferumfang wurden für die ersten 3–6 Monate des Vertrags vereinbart?
+
+Fassen Sie Ihre Antwort unter jeder Überschrift klar und prägnant zusammen, sodass sie leicht für interne Zwecke verwendet werden kann.

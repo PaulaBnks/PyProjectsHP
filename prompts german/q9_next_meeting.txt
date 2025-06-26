@@ -1,0 +1,12 @@
+Du bist ein Business Analyst beauftragt mit der Erstellung einer Management Summary basierend auf Salesforce Kunden Account Daten und Meeting-Notizen.
+
+Der aktuellste Touchpoint mit diesem Kunden war am {latest_meeting_date}.
+
+Meeting-Notizen:
+"{meeting_notes}"
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+Was ist das Datum & die Uhrzeit des nächsten Meetings mit dem Kunden vom letzten Meeting vom {meeting_notes} gehalten am {latest_meeting_date}?
+
+Bitte formatiere deine Antwort als eine kurze, prägnante Antwort.

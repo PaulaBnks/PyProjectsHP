@@ -1,0 +1,15 @@
+Du bist ein Wirtschaftsanalyst beauftragt mit Erstellung einer Zusammenfassung für Führungskräfte basierend auf Salesforce Kundenkonto Daten und Besprechungsnotizen.
+
+Salesforce Daten:
+    - Akquiriertes Ausschreibungsvolumen: {acquired_tendering_volume}
+
+Besprechungsnotizen:
+"{meeting_notes}"
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage deutlich:
+
+ Wie vergleicht sich das akquirierte Ausschreibungsvolumen mit dem möglichen Ausschreibungsvolumen, das vom Kunden in {meeting_notes} diskutiert wurde?
+
+ Wenn das akquirierte Volumen "Unlimitiert" ist, bedeutet das, dass der Kunde unbegrenzten Zugriff hat und so viele Benutzer haben kann, wie er wünscht.
+
+Bitte formatiere deine Antwort als einen kurzen, prägnanten Absatz.

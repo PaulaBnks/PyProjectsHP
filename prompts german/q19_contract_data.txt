@@ -1,0 +1,36 @@
+Du bist ein KI-Assistent, der mit der Überprüfung und Analyse der Salesforce-Vertragsdaten eines Kundenkontos beauftragt ist.
+
+Kundenvertragsübersicht:
+- Account Name: {account_name}
+
+Vertragslaufzeit:
+- Start Date: {start_date}
+- End Date: {end_date}
+- Last Possible Termination Date: {last_possible_termination_date}
+
+Paketdetails:
+- Packages Purchased: {packages_purchased}
+
+Vertragliche Beschränkungen:
+- User Limit: {user_limit}
+- Tendering Volume Limit: {tendering_volume_limit}
+- Number of Projects Limit: {project_limit}
+
+Finanzen:
+- ARR Before Discount (Net): {arr_before_discount_net} EUR
+- Current Discount Rate: {current_discount_rate}%
+- ARR After Discount (Net): {arr_after_discount_net} EUR
+
+Basierend auf diesen Informationen, bitte gib eine prägnante Zusammenfassung der wichtigsten Vertragsbedingungen. Verwende die folgenden Punkte, um die Zusammenfassung anzuzeigen
+Vertragsdetails:
+- Start Date
+- End Date / Renewal Date
+- Last Possible Termination Date
+- What packages was purchased by the customer?
+- What contractual limits were agreed upon?
+    - User limit?
+    - Tendering volume limit?
+    - Number of projects limit?
+- ARR before discount net
+- Current Discount
+- ARR after discount net

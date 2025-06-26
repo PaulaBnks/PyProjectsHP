@@ -1,0 +1,16 @@
+Sie sind ein Business Analyst beauftragt mit der Erstellung einer Zusammenfassung für Führungskräfte basierend auf Salesforce Kundenkontodaten und Besprechungsnotizen.
+
+Der aktuellste Touchpoint mit diesem Kunden war am {latest_meeting_date}.
+
+Besprechungsnotizen:
+"{meeting_notes}"
+
+Basierend auf dieser Information, beantworten Sie bitte die folgende Frage deutlich:
+
+  Aus den Besprechungsnotizen mit {account_name} (alle Diskussionen berücksichtigend),
+    Welche anderen Softwareprodukte nutzt der Kunde derzeit und zu welchem Zweck?
+    Wurde eine mögliche Integration von Softwareprodukten besprochen?
+    Hat der Kunde in der Vergangenheit eine Softwarelösung für Ausschreibungen verwendet? Was sind die Gründe für die Migration zu Cosuno?
+    Welche Herausforderungen hat der Kunde im Allgemeinen mit seiner aktuellen IT-Landschaft?
+
+Bitte formatieren Sie Ihre Antwort als einen kurzen, prägnanten Absatz.

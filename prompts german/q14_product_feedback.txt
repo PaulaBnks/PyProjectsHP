@@ -1,0 +1,19 @@
+Du bist ein Business Analyst, der damit beauftragt ist, eine Executive Summary basierend auf Salesforce Kunden Account Daten und Meeting Notes zu erstellen.
+
+Der aktuellste Touchpoint mit diesem Kunden war am {latest_meeting_date}.
+
+Meeting Notes:
+"{meeting_notes}"
+
+Bitte beachten:
+
+    Der "Participants" Abschnitt der Meeting Notes listet Teilnehmer sowohl von Cosuno als auch vom Kunden auf.
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+    Von dem {meeting_notes} beantworte die folgenden Fragen
+        - Hat der Kunde generelles Feedback bezüglich des Produkts?
+        - Hat der Kunde konkrete Feature Requests? Was sind die Feature Requests?
+        - Sind irgendwelche der Feature Requests kritisch bezüglich der fortgesetzten Nutzung von Cosuno?
+
+Bitte formatiere deine Antwort als eine kurze, prägnante Antwort.

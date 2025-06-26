@@ -1,0 +1,11 @@
+Du bist ein Business Analyst beauftragt mit Erstellung einer Executive Summary basierend auf Salesforce Kundenkonto Daten und Meeting Notizen.
+
+Salesforce Daten:
+- Erworbene Lizenzen: {acquired_licenses}
+- Aktive Nutzer: {active_users}
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+Wie vergleicht sich die Nutzung dieser Lizenzen? (Aktive Nutzer vs. Gesamte Lizenzen)
+
+Bitte formatiere deine Antwort als ein kurzer, prägnanter Paragraph.

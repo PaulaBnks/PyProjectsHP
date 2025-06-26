@@ -21,7 +21,8 @@ def load_prompt_template(filename):
     Loads a prompt template from the 'prompts' folder.
     """
     prompt_dir = os.path.dirname(__file__)
-    path = os.path.join(prompt_dir, "prompts", filename)
+    #path = os.path.join(prompt_dir, "prompts", filename) #English prompts directory
+    path = os.path.join(prompt_dir, "prompts german", filename) #German prompts directory
     
     if not os.path.exists(path):
         raise FileNotFoundError(f"Prompt template '{filename}' not found at {path}")
@@ -392,3 +393,19 @@ def create_prompt_question_23(account_name, website):
     )
 
     return filled_prompt23
+
+
+def create_prompt_question_24(account_name, meeting_notes, start_date, end_date):
+    """
+    Builds a prompt asking Gemini to summarize key customer success elements.
+    """
+    template = load_prompt_template("q24_customer_success_plan.txt")
+
+    filled_prompt24 = template.format(
+        account_name=account_name,
+        start_date=start_date,
+        end_date=end_date,
+        meeting_notes=meeting_notes
+    )
+
+    return filled_prompt24

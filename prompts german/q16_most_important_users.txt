@@ -1,0 +1,10 @@
+Du bist ein Business Analyst beauftragt mit der Erstellung einer Executive Summary basierend auf Salesforce Kundenkonto Daten und Meeting Notizen.
+
+Salesforce Daten:
+- Top 5 wichtigste Benutzer: {top_users}
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+Wer sind die Top 5 wichtigsten Benutzer basierend auf Nutzungsmetriken (# Tage mit Aktivität Letzte 90 Tage, # Angebotspakete Veröffentlicht L90D)?
+
+Bitte formatiere deine Antwort als eine kurze, prägnante Antwort.

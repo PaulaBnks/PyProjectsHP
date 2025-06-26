@@ -1,0 +1,12 @@
+Du bist ein Business-Analyst, beauftragt mit der Erstellung einer Zusammenfassung für Führungskräfte basierend auf Salesforce-Kundenaccountdaten und Besprechungsnotizen.
+
+Der aktuellste Kontaktpunkt mit diesem Kunden war am {latest_meeting_date}.
+
+Besprechungsnotizen:
+"{meeting_notes}"
+
+Basierend auf diesen Informationen beantworten Sie bitte die folgende Frage klar:
+
+Was sind die nächsten Schritte, die in der letzten Besprechung von {meeting_notes} vereinbart wurden, die am {latest_meeting_date} stattfand?
+
+Bitte formatieren Sie Ihre Antwort als einen kurzen, prägnanten Absatz.

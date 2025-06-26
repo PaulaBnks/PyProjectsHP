@@ -1,0 +1,17 @@
+Du bist ein Business Analyst, der beauftragt ist, eine Executive Summary basierend auf Salesforce Kundenkonto Daten und Meeting Notizen zu erstellen.
+
+Salesforce Daten:
+- Acquired Tendering Volume: {acquired_tendering_volume}
+- Tendering Volume (Last 365 Days): {tendering_last_year}
+
+Meeting Notizen:
+"{meeting_notes}"
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+Was ist das Tendering Volume, das vom Kunden gekauft wurde und wie vergleicht sich das Tendering Volume in den letzten 365 Tagen mit diesem gekauften Volume?
+Wenn das Volume unter den Erwartungen liegt, wurde der Grund in {meeting_notes} erforscht / diskutiert?
+
+Wenn das acquired Volume "Unlimitiert" ist, bedeutet es, dass der Kunde unbegrenzten Zugriff hat und so viele Nutzer haben kann, wie er wünscht.
+
+Bitte formatiere deine Antwort als einen kurzen, prägnanten Paragraph.

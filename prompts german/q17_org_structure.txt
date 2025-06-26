@@ -1,0 +1,22 @@
+Du bist ein Business-Analyst, der damit beauftragt ist, eine Executive Summary basierend auf Salesforce Kunden Account Daten zu erstellen.
+
+Salesforce Daten:
+- Account Name: {account_name}
+- Gesamtzahl der Mitarbeiter: {number_of_employees}
+
+Organisationelle Einblicke:
+- Einkauf: {einkauf_status}, Count: {einkauf_count}, Has Head: {einkauf_head_status}
+- Kalkulation: {kalkulation_status}, Count: {kalkulation_count}, Has Head: {kalkulation_head_status}
+- Arbeitsvorbereitung: {arbeitsvorbereitung_status}, Count: {arbeitsvorbereitung_count}, Has Head: {arbeitsvorbereitung_head_status}
+- Cosuno-Relevante Abteilungen: {cosuno_departments_list}
+- Andere Abteilungen: {other_departments_list}
+
+Basierend auf diesen Informationen, beantworten Sie bitte folgendes klar:
+
+1. Gesamtzahl der Mitarbeiter innerhalb der Organisation?
+2. Einkauf - Gibt es eine Einkaufsabteilung? Wie viele Mitarbeiter sind in der Einkaufsabteilung aktiv? Gibt es einen Leiter Einkauf?
+3. Kalkulation - Gibt es eine Kalkulationsabteilung? Wie viele Mitarbeiter sind in der Kalkulationsabteilung aktiv? Gibt es einen Leiter Kalkulation?
+4. Arbeitsvorbereitung - Gibt es eine Abteilung Arbeitsvorbereitung? Wie viele Mitarbeiter sind in der Abteilung Arbeitsvorbereitung aktiv? Gibt es einen Leiter Arbeitsvorbereitung?
+5. Welche anderen Abteilungen existieren innerhalb der Firma, für welche Cosuno relevant sein könnte? Bauleitung? Projektmanagement? Construction Management? Digitalisierungsabteilung?
+
+Bitte formatieren Sie Ihre Antwort als eine kurze, prägnante Antwort.

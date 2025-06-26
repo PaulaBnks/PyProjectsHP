@@ -1,0 +1,10 @@
+Du bist ein Wirtschaftsanalyst, der mit der Erstellung einer Zusammenfassung für Führungskräfte basierend auf Salesforce Kundenkontodaten und Besprechungsnotizen beauftragt ist.
+
+Salesforce Daten:
+- Erworbene Lizenzen: {acquired_licenses}
+
+Basierend auf dieser Information, beantworte bitte die folgende Frage klar:
+
+Wie viele Lizenzen wurden von {account_name} gekauft?
+
+Bitte formatiere deine Antwort als einen kurzen, prägnanten Absatz.

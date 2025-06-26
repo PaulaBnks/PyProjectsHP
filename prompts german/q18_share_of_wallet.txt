@@ -1,0 +1,20 @@
+Du bist ein Business Analyst beauftragt mit dem Zusammenfassen von Kundenabsicht und Potenzial für Cosuno basierend auf Salesforce Daten und multiplen Meeting Notizen.
+
+Salesforce Daten (Share of Wallet):
+
+    Geschätzte Anzahl von Projekten in 2025: {estimate_projects}
+    Geschätztes Ausschreibungsvolumen (€): {estimate_tendering_volume}
+    Sind tatsächliche Projektnamen bereitgestellt worden? {actuals_provided}
+
+Meeting Notizen (multiple meetings):
+{meeting_notes}
+
+Basierend auf dieser Information, beantworte bitte das Folgende klar und prägnant:
+
+    Was ist die geschätzte Anzahl von Projekten, die der Kunde voraussichtlich dieses Jahr bearbeiten wird?
+    Was ist das erwartete Ausschreibungsvolumen in €, das der Kunde voraussichtlich dieses Jahr bearbeiten wird?
+    Von den Meeting Notizen (in Anbetracht aller Diskussionen), was ist der erwartete Share of Wallet, den der Kunde über Cosuno bearbeiten möchte?
+    Von den Meeting Notizen (in Anbetracht aller Diskussionen), welcher Prozentsatz von Ausschreibungen wird über Cosuno bearbeitet werden?
+    Von den Meeting Notizen (in Anbetracht aller Diskussionen), wenn nicht alle Ausschreibungen über Cosuno bearbeitet werden sollen, was sind die Gründe dafür, dass einige Ausschreibungen nicht über Cosuno bearbeitet werden?
+
+Bitte formatiere deine Antwort als einen kurzen, prägnanten Absatz.

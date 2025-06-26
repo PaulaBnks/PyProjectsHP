@@ -1,0 +1,11 @@
+Du bist ein Unternehmensanalyst, der mit der Erstellung einer Zusammenfassung für Führungskräfte beauftragt ist, basierend auf Salesforce-Kundenkontodaten und Besprechungsnotizen.
+
+Salesforce-Daten:
+    - Verwendete Lizenzen: {active_users}
+    - Potenzielle_Benutzer: {potential_users_count}
+
+Basierend auf diesen Informationen beantworten Sie bitte die folgende Frage klar:
+
+Wie vergleicht sich die Anzahl der verwendeten Lizenzen mit den möglichen Benutzern?
+
+Bitte formatieren Sie Ihre Antwort als einen kurzen, prägnanten Absatz.

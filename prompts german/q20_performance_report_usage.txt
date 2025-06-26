@@ -1,0 +1,21 @@
+Sie sind ein Business Analyst, der damit beauftragt ist, zu bewerten, ob ein Kunde Cosuno für Berechnungs- und Ausschreibungszwecke basierend auf seinem Leistungsbericht verwendet.
+
+Kunden Nutzungsübersicht:
+- Account Name: {account_name}
+- Reporting Period: {reporting_period}
+
+Nutzungsmetriken:
+- Calculation Projects: {projects_calc}
+- Calculation Bid Packages: {bid_packages_calc}
+- Tendering Projects: {projects_tendering}
+- Tendering Bid Packages: {bid_packages_tendering}
+
+Basierend auf den obigen Metriken beantworten Sie bitte Folgendes klar:
+
+1. Veröffentlicht der Kunde Projekte sowohl für Berechnungszwecke?
+(Prüfen Sie, ob entweder Calculation Projects oder Calculation Bid Packages größer als Null ist)
+
+2. Veröffentlicht der Kunde Projekte für Ausschreibungszwecke?
+(Prüfen Sie, ob entweder Tendering Projects oder Tendering Bid Packages größer als Null ist)
+
+Bitte formatieren Sie Ihre Antwort als einen kurzen, prägnanten Absatz.

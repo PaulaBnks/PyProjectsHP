@@ -319,3 +319,76 @@ def create_prompt_question_19(contract_data):
     )
 
     return filled_prompt19
+
+
+def create_prompt_question_20(usage_data):
+    template = load_prompt_template("q20_performance_report_usage.txt")
+
+    filled_prompt20 = template.format(
+        account_name=usage_data['account_name'],
+        reporting_period=usage_data['reporting_period'],
+        projects_calc=usage_data['projects_calc'],
+        bid_packages_calc=usage_data['bid_packages_calc'],
+        projects_tendering=usage_data['projects_tendering'],
+        bid_packages_tendering=usage_data['bid_packages_tendering']
+    )
+
+    return filled_prompt20
+
+
+def create_prompt_question_21(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 21: Upsell Potential:
+    """
+    template = load_prompt_template("q21_upsell_potential.txt")
+
+    filled_prompt21 = template.format(
+        account_name=account_name,
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt21
+
+
+def create_prompt_question_22(account_name, meeting_notes, latest_meeting_date):
+    """
+    Builds the prompt for Question 22: IT Landscape:
+    """
+    template = load_prompt_template("q22_IT_landscape.txt")
+
+    filled_prompt22 = template.format(
+        account_name=account_name,
+        meeting_notes=meeting_notes,
+        latest_meeting_date=latest_meeting_date
+    )
+    return filled_prompt22
+
+
+def create_prompt_question_23(account_name, website):
+    """
+    Builds the prompt for Question 23: Customer Profile.
+    If website is not provided, tries to find it using Gemini.
+    """
+    # Step 1: Try to resolve website if not given
+    if not website or website.lower() in ["not specified", "n/a", "", "none"]:
+        gemini_prompt = f"""
+        You are a research assistant. Your task is to find the official website of '{account_name}'.
+        
+        Please respond with only the official website URL. Do not add explanations or other text.
+        """
+        try:
+            print(f"Website not found for {account_name}, searching online...")
+            website = call_gemini(gemini_prompt).strip()
+        except Exception as e:
+            print(f"Error finding website for {account_name}: {str(e)}")
+            website = "Website not found"
+
+    # Step 2: Load template and fill it
+    template = load_prompt_template("q23_account_summary.txt")
+
+    filled_prompt23 = template.format(
+        account_name=account_name,
+        website=website
+    )
+
+    return filled_prompt23

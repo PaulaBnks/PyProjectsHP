@@ -3,6 +3,69 @@ import os
 from utils import chunked, is_recent
 from datetime import datetime, timedelta
 
+
+def get_performance_usage_data(sf, account_id):
+    """
+    Fetches the latest Performance Report where Reporting Period is 'Last 365 Days'
+    and returns usage indicators for calculation and tendering.
+
+    Returns:
+        dict: Structured data ready to pass into a Gemini prompt.
+    """
+    result = {
+        "account_name": "",
+        "reporting_period": "Last 365 Days",
+        "projects_calc": 0,
+        "bid_packages_calc": 0,
+        "projects_tendering": 0,
+        "bid_packages_tendering": 0,
+        "uses_for_calculation": False,
+        "uses_for_tendering": False
+    }
+
+    # Query Account Name
+    account_result = sf.query(f"SELECT Id, Name FROM Account WHERE Id = '{account_id}'")
+    if account_result['totalSize'] == 0:
+        raise ValueError(f"No Account found with ID {account_id}")
+    account = account_result['records'][0]
+    result["account_name"] = account['Name']
+
+    # Query Performance Report
+    query = f"""
+        SELECT Id, Projects_calc__c, Bid_Packages_calc__c,
+               Projects__c, Bid_Packages__c
+        FROM Performance_Report__c
+        WHERE Account__c = '{account_id}'
+          AND Reporting_Period__c = 'Last 365 Days'
+        ORDER BY CreatedDate DESC
+        LIMIT 1
+    """
+
+    report_result = sf.query(query)
+
+    if report_result['totalSize'] > 0:
+        report = report_result['records'][0]
+
+        # Extract values
+        projects_calc = report.get('Projects_calc__c', 0) or 0
+        bid_packages_calc = report.get('Bid_Packages_calc__c', 0) or 0
+        projects_tendering = report.get('Projects__c', 0) or 0
+        bid_packages_tendering = report.get('Bid_Packages__c', 0) or 0
+
+        # Update result
+        result.update({
+            "projects_calc": int(projects_calc),
+            "bid_packages_calc": int(bid_packages_calc),
+            "projects_tendering": int(projects_tendering),
+            "bid_packages_tendering": int(bid_packages_tendering),
+            "uses_for_calculation": projects_calc > 0 or bid_packages_calc > 0,
+            "uses_for_tendering": projects_tendering > 0 or bid_packages_tendering > 0
+        })
+
+    return result
+
+
+
 def get_contract_data(sf, account_id):
     """
     Fetches ServiceContract and related ContractLineItem data for a given Account ID.

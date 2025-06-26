@@ -1,0 +1,21 @@
+You are a business analyst tasked with evaluating whether a customer uses Cosuno for calculation and tendering purposes based on their performance report.
+
+Customer Usage Overview:
+- Account Name: {account_name}
+- Reporting Period: {reporting_period}
+
+Usage Metrics:
+- Calculation Projects: {projects_calc}
+- Calculation Bid Packages: {bid_packages_calc}
+- Tendering Projects: {projects_tendering}
+- Tendering Bid Packages: {bid_packages_tendering}
+
+Based on the above metrics, please answer the following clearly:
+
+1. Is the customer publishing projects for both calculation purposes? 
+   (Check if either Calculation Projects or Calculation Bid Packages is greater than zero)
+   
+2. Is the customer publishing projects for tendering purposes?
+   (Check if either Tendering Projects or Tendering Bid Packages is greater than zero)
+
+Please format your response as a short, concise paragraph.

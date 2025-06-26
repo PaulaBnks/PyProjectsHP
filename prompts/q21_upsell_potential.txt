@@ -1,0 +1,16 @@
+You are a business analyst tasked with creating an executive summary based on Salesforce customer account data and meeting notes.
+
+The most recent touchpoint with this customer was on {latest_meeting_date}.
+
+
+Meeting Notes:
+"{meeting_notes}"
+
+
+Based on this information, please answer the following question clearly:
+
+  From the meeting notes with {account_name} (considering all discussions), has upsell potential been identified? More functionality? More users? More tendering volume? Can the upsell potential be quantified?
+  Has an upsell strategy been defined?
+
+
+Please format your response as a short, concise paragraph.

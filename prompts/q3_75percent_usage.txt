@@ -2,13 +2,13 @@ You are a business analyst tasked with creating an executive summary based on Sa
 
 Salesforce Data:
 - Acquired Licences: {acquired_licenses}
-- Active Users: {active_users}
+- Active Licences: {active_users}
 - Number of Users with ≥75% Activity Score: {users_at_75_activity}
 
 
 
 Based on this information, please answer the following question clearly:
 
- How does the usage of these licences compare? (Active Users vs Total Licences)
+ Are all licences used at 75% activity rate?
 
 Please format your response as a short, concise paragraph.

@@ -7,14 +7,14 @@ from gemini_prompter import (
     create_prompt_question_4, create_prompt_question_5, create_prompt_question_6, create_prompt_question_7, create_prompt_question_8,
     create_prompt_question_9, create_prompt_question_10, create_prompt_question_11, create_prompt_question_12, create_prompt_question_13,
     create_prompt_question_14, create_prompt_question_15, create_prompt_question_16, create_prompt_question_17, create_prompt_question_18,
-    create_prompt_question_19
+    create_prompt_question_19, create_prompt_question_20, create_prompt_question_21, create_prompt_question_22, create_prompt_question_23
 )
 
 from note_extractor import extract_note_content
 from doc_writer import get_google_docs_service, clear_and_update_google_doc
 from utils import chunked, is_recent
 from salesforce_functions import (get_potential_users, format_tendering_volume, get_top_user_usage_metrics,get_account_organization_insights,
- get_share_of_wallet_data, get_contract_data)
+ get_share_of_wallet_data, get_contract_data, get_performance_usage_data)
 from datetime import datetime, timedelta
 
 DOCUMENT_ID = '1hISTyvQ_r-DVI3n3kfRQ9WGQiHcBvLMgh48M4zIuhkc'
@@ -30,7 +30,7 @@ def main():
 
         print("📡 Query Salesforce for target account...")
         query = """
-            SELECT Id, Name, Acquired_Licenses__c, Active_Users__c, Number_of_User_with_75_Activity_Score__c, Acquired_Tendering_volume__c, Bid_Packages_Tot_last_365_Days__c, NumberOfEmployees 
+            SELECT Id, Name,Website, Acquired_Licenses__c, Active_Users__c, Number_of_User_with_75_Activity_Score__c, Acquired_Tendering_volume__c, Bid_Packages_Tot_last_365_Days__c, NumberOfEmployees 
             FROM Account 
             WHERE Id = '00109000013HnuHAAS'
         """
@@ -40,6 +40,7 @@ def main():
         for acc in accounts:
             accountid = acc['Id']
             account_name = acc.get('Name')
+            website = acc.get('Website', 'Not specified')
             acquired_licenses = acc.get("Acquired_Licenses__c")
             active_users = acc.get("Active_Users__c")
             users_at_75_activity = acc.get("Number_of_User_with_75_Activity_Score__c")
@@ -72,6 +73,9 @@ def main():
                 sow_data['estimate_tendering_volume'] = sow_data['estimate_tendering_volume'] or "Not specified"
 
             contract_data = get_contract_data(sf, accountid)
+            usage_data = get_performance_usage_data(sf, accountid)
+
+
 
              # Initialize full_summary here
             full_summary = ""
@@ -575,7 +579,7 @@ def main():
             prompt19 = create_prompt_question_19(                  
                 contract_data=contract_data                                            
             )       
-            # Ask Gemini Question 18
+            # Ask Gemini Question 19
             try:
                 print("\n📌 Sending to Gemini (Question 19):")
                 response19 = model.generate_content(prompt19)
@@ -591,6 +595,116 @@ def main():
             \n
             {answer19}
             \n\n"""
+
+             
+
+            #Build Prompt for Question 20
+            prompt20 = create_prompt_question_20(                  
+                usage_data=usage_data                                            
+            )       
+            # Ask Gemini Question 20
+            try:
+                print("\n📌 Sending to Gemini (Question 20):")
+                response20 = model.generate_content(prompt20)
+                answer20 = response20.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 20: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 20. Usage Metrics
+            ### Question: How many licences have been purchased?
+            {answer1}
+            \n
+            ### Question: How does the usage of these licences compare? (Active Users vs Total Licences)
+            {answer2}
+            \n
+            ### Question: Are all licences used at a 75% activity rate or higher?
+            {answer3}
+            \n
+            ### Question: Is the customer publishing projects for both calculation and tendering purposes?
+            \n
+            {answer20}
+            \n\n"""
+
+
+
+
+            #Build Prompt for Question 21
+            prompt21 = create_prompt_question_21(
+                account_name=account_name,                
+                meeting_notes = meeting_notes,
+                latest_meeting_date=latest_meeting_date                  
+            )
+            # Ask Gemini Question 21
+            try:
+                print("\n📌 Sending to Gemini (Question 21):")
+                response21 = model.generate_content(prompt21)
+                answer21 = response21.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 21: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 21. Upsell Potential:
+            ### How do the number of used licences compare with possible users (Summe von Einkauf, Kalkulation, Arbeitsvorbereitung)?
+            \n
+            {answer7}
+            \n                
+            ### Question: Has upsell potential been identified?
+            \n
+            {answer21}
+            \n\n"""
+
+
+
+            #Build Prompt for Question 22
+            prompt22 = create_prompt_question_22(   
+                account_name=account_name,                
+                meeting_notes = meeting_notes,
+                latest_meeting_date=latest_meeting_date                  
+            )
+            # Ask Gemini Question 22
+            try:
+                print("\n📌 Sending to Gemini (Question 22):")
+                response22 = model.generate_content(prompt22)
+                answer22 = response22.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 22: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 22. IT Landscape:
+            ### Question: What other software products is the customer currently using and for what purpose?
+            {answer22}
+            \n\n"""
+
+
+            #Build Prompt for Question 23
+            prompt23 = create_prompt_question_23(   
+                account_name=account_name,
+                website=website
+            )
+            # Ask Gemini Question 23
+            try:    
+                print("\n📌 Sending to Gemini (Question 23):")
+                response23 = model.generate_content(prompt23)
+                answer23 = response23.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                print(f"❌ Gemini error 23: {e}")
+                candidate = "(Error generating summary)"
+
+            # Combine Results
+            full_summary += f"""
+            ## 23.Account Summary: 
+            ### Question: Describe customer profile
+            \n
+            {answer23}
+            \n\n"""
+
 
 
 
